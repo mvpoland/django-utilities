@@ -5,9 +5,6 @@ from utilities.valuta import validate_iban
 import re
 
 class IBANField(forms.CharField):    
-    def __init__(self, *args, **kwargs):
-        super(forms.CharField, self).__init__(*args, **kwargs)
-        
     def clean(self, value):
         m = re.findall('[A-Z-a-z0-9]+', value)
 
