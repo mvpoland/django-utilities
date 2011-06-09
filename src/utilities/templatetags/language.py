@@ -1,9 +1,8 @@
 # Author: Jonathan Slenders, City Live
 
-from django.template import Node, NodeList
-from django.template import TemplateSyntaxError, VariableDoesNotExist
+from django.template import Node
+from django.template import TemplateSyntaxError
 from django.template import Library, Variable
-from django.conf import settings
 
 from utilities.translation import language as language_block
 

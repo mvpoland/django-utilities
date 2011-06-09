@@ -10,7 +10,7 @@ setup(
     author = 'City Live NV',
     packages = find_packages('src'),
     package_data = {'utilities': [
-					'templates/*.html', 'templates/*/*.html', 'templates/*/*/*.html'
+                    'templates/*.html', 'templates/*/*.html', 'templates/*/*/*.html'
                 ],},
     zip_safe=False, # Don't create egg files, Django cannot find templates in egg files.
     include_package_data=True,
