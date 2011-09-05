@@ -36,7 +36,7 @@ class LanguageNode(Node):
 
 @register.tag
 def language(parser, token):
-    nodelist = parser.parse(('endlanguage', ))
+    nodelist = parser.parse(('endlanguage',))
     parser.delete_first_token()
 
     bits = token.contents.split()
@@ -46,3 +46,8 @@ def language(parser, token):
 
 
     return LanguageNode(nodelist, bits[1])
+
+@register.filter
+def lang(value, language):
+    with language_block(language):
+        return value
