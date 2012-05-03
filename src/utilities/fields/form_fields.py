@@ -31,4 +31,18 @@ class VATField(forms.CharField):
             raise forms.ValidationError(_('This is not a valid Belgian VAT number'))
 
         return value
+    
+class EnterpriseNumberField(forms.CharField):
+    def clean(self, value):
+        valid = len(value) == 10
+
+        if valid:
+            m = re.match('0[0-9]+', value)
+
+            valid = m is not None
+
+        if not valid:
+            raise forms.ValidationError(_('This is not a valid Belgian enterprise number'))
+
+        return value
 
