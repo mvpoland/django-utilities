@@ -15,3 +15,7 @@ class SOMVector():
             summation += temp
             
         return math.sqrt(summation)
+    
+    def encode_json(self):
+        return {'tag': self.tag,
+                'weights': self.weights}

@@ -1,7 +1,7 @@
 import random
 import math
 
-from neural_nets.som.vector import SOMVector
+from utilities.neural_nets.som.vector import SOMVector
 
 class SOMNode():
     def __init__(self, feature_count, x, y, names):
@@ -9,7 +9,6 @@ class SOMNode():
         self.error = float(0)
         self.x = x
         self.y = y
-        self.weights = []
         self.associates = []    
         self.names = names
         self.feature_vector = SOMVector(0, [])
@@ -27,4 +26,14 @@ class SOMNode():
             
             feature_weight += distance_falloff * learning_rate * (input_weight - feature_weight);
             self.feature_vector.weights[i] = feature_weight
-                
+            
+    def encode_json(self):
+        return {'vector': self.feature_vector.encode_json(),
+                'x': self.x,
+                'y': self.y,
+                'error': self.error,
+                'bmu_count': self.bmu_count,
+                'associates': map(lambda a: {'associated_object': a['associated_object'].encode_json(),
+                                             'error': a['error']}, self.associates)}
+        
+            

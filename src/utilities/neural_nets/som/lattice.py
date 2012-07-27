@@ -1,6 +1,6 @@
 import random
 
-from neural_nets.som.node import SOMNode
+from utilities.neural_nets.som.node import SOMNode
 
 class SOMLattice():
     
@@ -39,6 +39,12 @@ class SOMLattice():
                 self.matrix[x].append(node)
                 self.nodes.append(node)                
                 
+    def encode_json(self):
+        return {'feature_count': self.feature_count,
+                'nodes': [n.encode_json() for n in self.nodes],
+                'height': self.height,
+                'width': self.width}
+        
     def clone(self):
         result = SOMLattice(self.width, self.height, self.feature_count)
         
