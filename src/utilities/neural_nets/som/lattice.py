@@ -26,15 +26,17 @@ class SOMLattice():
                 print x, y
                 node = SOMNode(feature_count, x, y, names)                
                 
-                for _ in range(0, feature_count):
-                    if gradient:
-                        node.weights.append(int(255 * ((xstep * x) + (ystep * y))))
-                    else:
-                        node.weights.append(int(random.uniform(0,256)))                                             
-                        
-                    for i in self.matrix:
-                        for j in i:
-                            self.nodes.append(j)
+                #===============================================================
+                # for _ in range(0, feature_count):
+                #    if gradient:
+                #        node.weights.append(int(255 * ((xstep * x) + (ystep * y))))
+                #    else:
+                #        node.weights.append(int(random.uniform(0,256)))                                             
+                #        
+                #    for i in self.matrix:
+                #        for j in i:
+                #            self.nodes.append(j)
+                #===============================================================
                     
                 self.matrix[x].append(node)
                 self.nodes.append(node)                
