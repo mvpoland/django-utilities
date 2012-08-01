@@ -18,7 +18,6 @@ class SOMLattice():
             self.matrix.append([])
             
             for y in range(0, height):
-                print x, y
                 node = SOMNode(feature_count, x, y)                
                 
                 self.matrix[x].append(node)

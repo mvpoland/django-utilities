@@ -6,14 +6,8 @@ START_LEARNING_RATE = [0.9, 0.1]
 NUM_ITERATIONS = [100, 200]
 
 class SOMTrainer():
-    def __init__(self):
-        self.lattice = None
-        self.inputs = None
-        self.runner = None
-        self.stopping = False
-        self.done_handler = None
-        self.progressing_handler = None
-        self.status_changed_handler = None
+    def __init__(self, lattice):
+        self.lattice = lattice
         self.LATTICE_RADIUS = 0
         self.TIME_CONSTANT = 0
         
@@ -37,23 +31,11 @@ class SOMTrainer():
         
         return math.exp(-distsq / (2 * math.pow(radius, 2)))
     
-    def register_lattice(self, lattice):
-        self.lattice = lattice
+    def start_training(self, inputs):        
+        """
+        Train the neural net
+        """
         
-    def __on_done(self):
-        if self.done_handler:
-            self.done_handler()        
-            
-    def __on_progressing(self, percentage):
-        if self.progressing_handler:
-            self.progressing_handler(percentage)
-            
-    def __on_status_changed(self, status):
-        if self.status_changed_handler:
-            self.status_changed_handler(status)
-    
-    def __thread(self):        
-            
         try:
             lattice_width = self.lattice.width
             lattice_height = self.lattice.height
@@ -75,10 +57,8 @@ class SOMTrainer():
                 # See forumla 2b
                 self.TIME_CONSTANT = NUM_ITERATIONS[phase] / self.LATTICE_RADIUS
                 
-                while not self.stopping and iteration < NUM_ITERATIONS[phase]:
-                    percentage = (float(iteration) / float(NUM_ITERATIONS[phase])) * 100
-                    
-                    self.__on_progressing(percentage)
+                while iteration < NUM_ITERATIONS[phase]:
+                    percentage = (float(iteration) / float(NUM_ITERATIONS[phase])) * 100                    
                     
                     # Reset associated input vectors
                     for node in self.lattice.nodes:
@@ -88,8 +68,8 @@ class SOMTrainer():
                     nbh_radius = self.get_neighborhood_radius(iteration, phase)
                     
                     # Loop the input vectors
-                    for i in range(0, len(self.inputs)):
-                        cur_input = self.inputs[i]                
+                    for i in range(0, len(inputs)):
+                        cur_input = inputs[i]                
                         
                         # Find the BMU for this input vector and associated it with this unit
                         bmu, best_dist = self.lattice.get_bmu(cur_input)                    
@@ -116,32 +96,7 @@ class SOMTrainer():
                                     
                     iteration += 1
                     learning_rate = self.start_rate * math.exp(-float(iteration) / NUM_ITERATIONS[phase])
-                    self.__on_status_changed("The SOM network is training. Learning rate: %s - Iteration: %s" % (learning_rate,
-                                                                                                                 iteration))
+                    print "The SOM network is training. Learning rate: %s - Iteration: %s" % (learning_rate,
+                                                                                              iteration)
         finally:
-            if self.stopping:
-                self.__on_status_changed('The learning process has been cancelled.')
-            else:
-                self.__on_status_changed('The learning process has finished.')
-                
-            self.__on_done()
-            self.__on_progressing(0)
-                
-                
-        
-    def start_training(self, inputs, reset=False):
-        self.reset = reset
-        self.inputs = inputs
-        
-        if self.lattice:
-            self.stopping = False
-            
-            self.runner = Thread(target=self.__thread)
-            self.runner.start()
-            
-    def stop_training(self):
-        self.stopping = True                                
-        
-        if self.runner:
-            while self.runner.isAlive():
-                pass            
+            print 'The learning process has finished.'            
