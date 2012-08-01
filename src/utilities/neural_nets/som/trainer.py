@@ -3,7 +3,7 @@ import math
 from threading import Thread
 
 START_LEARNING_RATE = [0.9, 0.1]
-NUM_ITERATIONS = [100, 200]
+NUM_ITERATIONS = 100
 
 class SOMTrainer():
     def __init__(self, lattice):
@@ -43,22 +43,26 @@ class SOMTrainer():
             # 2 phases.
             # Phase 1: reduce learning rate from 0.9 to 0.1 in 100 iterations.
             # Phase 2: smooth out lattice and reduce learning rate further from 0.1 to 0.0 in 200 iterations
-            for phase in range(0, 2):
-                iteration = 0
+            for phase in range(0, 2):                                
                 learning_rate = START_LEARNING_RATE[phase]
-                
+                map_radius = self.LATTICE_RADIUS = (lattice_width if lattice_width > lattice_height else lattice_height) / 2.0
                 if phase == 0:                
                     # Initially the radius is half of the diameter of the lattice
-                    self.LATTICE_RADIUS = (lattice_width if lattice_width > lattice_height else lattice_height) / 2.0
+                    self.LATTICE_RADIUS = map_radius
+                    iterations = NUM_ITERATIONS
                 else:
                     # In phase 2 the radius is fixed to just the BMU
-                    self.LATTICE_RADIUS = 1                
+                    self.LATTICE_RADIUS = 1
+                    iterations = iteration * 2                                
+                
+                iteration = 0
                 
                 # See forumla 2b
-                self.TIME_CONSTANT = NUM_ITERATIONS[phase] / self.LATTICE_RADIUS
+                self.TIME_CONSTANT = iterations / map_radius
                 
-                while iteration < NUM_ITERATIONS[phase]:
-                    percentage = (float(iteration) / float(NUM_ITERATIONS[phase])) * 100                    
+                import pdb; pdb.set_trace()
+                while iteration < iterations:
+                    percentage = (float(iteration) / float(iterations)) * 100                    
                     
                     # Reset associated input vectors
                     for x in range(0, self.lattice.width):
@@ -96,8 +100,22 @@ class SOMTrainer():
                                     temp.adjust_weights(cur_input, learning_rate, dist_falloff)
                                     
                     iteration += 1
-                    learning_rate = START_LEARNING_RATE[phase] * math.exp(-float(iteration) / NUM_ITERATIONS[phase])
+                    learning_rate = START_LEARNING_RATE[phase] * math.exp(-float(iteration) / self.TIME_CONSTANT)                    
+                        
                     print "The SOM network is training. Learning rate: %s - Iteration: %s" % (learning_rate,
                                                                                               iteration)
+                    
+                    for y in range(0, self.lattice.height):
+                        line = ''
+                        for x in range(0, self.lattice.width):
+                            if x == 0:
+                                line = str(len(self.lattice.matrix[x][y].associates))
+                            else:
+                                line += ';%s' % len(self.lattice.matrix[x][y].associates)
+                                
+                        print line
+                        
+                    if phase == 0 and learning_rate < 0.1:
+                        break;
         finally:
             print 'The learning process has finished.'            
