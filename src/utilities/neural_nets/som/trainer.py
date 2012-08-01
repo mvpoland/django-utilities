@@ -61,8 +61,9 @@ class SOMTrainer():
                     percentage = (float(iteration) / float(NUM_ITERATIONS[phase])) * 100                    
                     
                     # Reset associated input vectors
-                    for node in self.lattice.nodes:
-                        node.associates = []
+                    for x in range(0, self.lattice.width):
+                        for y in range(0, self.lattice.height):
+                            self.lattice.matrix[x][y].associates = []
                     
                     # Get the neighbourhood radius for the current iteration
                     nbh_radius = self.get_neighborhood_radius(iteration, phase)
