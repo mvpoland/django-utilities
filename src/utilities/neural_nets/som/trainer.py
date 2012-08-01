@@ -2,9 +2,6 @@ import math
 
 from threading import Thread
 
-START_LEARNING_RATE = [0.9, 0.1]
-NUM_ITERATIONS = 100
-
 class SOMTrainer():
     def __init__(self, lattice):
         self.lattice = lattice
@@ -31,7 +28,7 @@ class SOMTrainer():
         
         return math.exp(-distsq / (2 * math.pow(radius, 2)))
     
-    def start_training(self, inputs):        
+    def start_training(self, inputs, iterations=100, learning_rates=[0.9, 0.1]):        
         """
         Train the neural net
         """
@@ -43,8 +40,8 @@ class SOMTrainer():
             # 2 phases.
             # Phase 1: reduce learning rate from 0.9 to 0.1 in 100 iterations.
             # Phase 2: smooth out lattice and reduce learning rate further from 0.1 to 0.0 in 200 iterations
-            for phase in range(0, 2):                                
-                learning_rate = START_LEARNING_RATE[phase]
+            for phase in range(0, len(learning_rates)):                                
+                learning_rate = learning_rates[phase]
                 map_radius = self.LATTICE_RADIUS = (lattice_width if lattice_width > lattice_height else lattice_height) / 2.0
                 if phase == 0:                
                     # Initially the radius is half of the diameter of the lattice
@@ -99,7 +96,7 @@ class SOMTrainer():
                                     temp.adjust_weights(cur_input, learning_rate, dist_falloff)
                                     
                     iteration += 1
-                    learning_rate = START_LEARNING_RATE[phase] * math.exp(-float(iteration) / self.TIME_CONSTANT)                    
+                    learning_rate = learning_rates[phase] * math.exp(-float(iteration) / self.TIME_CONSTANT)                    
                         
                     print "The SOM network is training. Learning rate: %s - Iteration: %s" % (learning_rate,
                                                                                               iteration)
@@ -114,7 +111,7 @@ class SOMTrainer():
                                 
                         print line
                         
-                    if phase == 0 and learning_rate < 0.1:
+                    if phase == 0 and learning_rate < learning_rates[phase+1]:
                         break;
         finally:
             print 'The learning process has finished.'            
