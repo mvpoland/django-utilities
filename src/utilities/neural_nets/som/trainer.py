@@ -60,7 +60,6 @@ class SOMTrainer():
                 # See forumla 2b
                 self.TIME_CONSTANT = iterations / map_radius
                 
-                import pdb; pdb.set_trace()
                 while iteration < iterations:
                     percentage = (float(iteration) / float(iterations)) * 100                    
                     
