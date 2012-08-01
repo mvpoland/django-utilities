@@ -4,18 +4,13 @@ from utilities.neural_nets.som.node import SOMNode
 
 class SOMLattice():
     
-    def __init__(self, width, height, feature_count, names, gradient=False):
+    def __init__(self, width, height, feature_count):
         self.feature_count = feature_count
-        self.nodes = []
         self.width = width
         self.height = width
-        self.gradient = gradient
-        self.names = names
         
         xstep = float(0.5) / float(width)
         ystep = float(0.5) / float(width)
-        
-        print xstep, ystep
         
         self.matrix = []
         
@@ -24,29 +19,10 @@ class SOMLattice():
             
             for y in range(0, height):
                 print x, y
-                node = SOMNode(feature_count, x, y, names)                
+                node = SOMNode(feature_count, x, y)                
                 
-                #===============================================================
-                # for _ in range(0, feature_count):
-                #    if gradient:
-                #        node.weights.append(int(255 * ((xstep * x) + (ystep * y))))
-                #    else:
-                #        node.weights.append(int(random.uniform(0,256)))                                             
-                #        
-                #    for i in self.matrix:
-                #        for j in i:
-                #            self.nodes.append(j)
-                #===============================================================
-                    
                 self.matrix[x].append(node)
-                self.nodes.append(node)                
                 
-    def encode_json(self):
-        return {'feature_count': self.feature_count,
-                'nodes': [n.encode_json() for n in self.nodes],
-                'height': self.height,
-                'width': self.width}
-        
     def clone(self):
         result = SOMLattice(self.width, self.height, self.feature_count)
         
