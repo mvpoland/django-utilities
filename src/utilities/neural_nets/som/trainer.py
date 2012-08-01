@@ -96,7 +96,7 @@ class SOMTrainer():
                                     temp.adjust_weights(cur_input, learning_rate, dist_falloff)
                                     
                     iteration += 1
-                    learning_rate = self.start_rate * math.exp(-float(iteration) / NUM_ITERATIONS[phase])
+                    learning_rate = START_LEARNING_RATE[phase] * math.exp(-float(iteration) / NUM_ITERATIONS[phase])
                     print "The SOM network is training. Learning rate: %s - Iteration: %s" % (learning_rate,
                                                                                               iteration)
         finally:
