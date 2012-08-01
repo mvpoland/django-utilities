@@ -45,8 +45,7 @@ class SOMTrainer():
                 map_radius = self.LATTICE_RADIUS = (lattice_width if lattice_width > lattice_height else lattice_height) / 2.0
                 if phase == 0:                
                     # Initially the radius is half of the diameter of the lattice
-                    self.LATTICE_RADIUS = map_radius
-                    iterations = NUM_ITERATIONS
+                    self.LATTICE_RADIUS = map_radius                    
                 else:
                     # In phase 2 the radius is fixed to just the BMU
                     self.LATTICE_RADIUS = 1
